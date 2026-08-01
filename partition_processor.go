@@ -89,7 +89,11 @@ type PartitionProcessor struct {
 	mStats sync.RWMutex
 	stats  *PartitionProcStats
 
-	commit   commitCallback
+	// commits orders the offset commits of the input topics. Messages must be
+	// committed through it and never through its wrapped callback directly,
+	// otherwise a message can acknowledge an earlier message that is still in
+	// flight.
+	commits  *commitOrderer
 	producer Producer
 
 	opts *poptions
@@ -163,7 +167,7 @@ func newPartitionProcessor(partition int32,
 
 		stats: newPartitionProcStats(topicList, outputList),
 
-		commit:  commit,
+		commits: newCommitOrderer(commit),
 		runMode: runMode,
 	}
 
@@ -572,6 +576,10 @@ func (pp *PartitionProcessor) processVisit(ctx context.Context, wg *sync.WaitGro
 }
 
 func (pp *PartitionProcessor) processMessage(ctx context.Context, wg *sync.WaitGroup, msg *message, syncFailer func(err error), asyncFailer func(err error)) error {
+	// register the message as in flight before it is processed, so that its
+	// commit is ordered against the messages dispatched around it
+	commitMsg := pp.commits.track(msg)
+
 	msgContext := &cbContext{
 		ctx:   ctx,
 		graph: pp.graph,
@@ -579,7 +587,7 @@ func (pp *PartitionProcessor) processMessage(ctx context.Context, wg *sync.WaitG
 		trackOutputStats:      pp.enqueueTrackOutputStats,
 		pviews:                pp.joins,
 		views:                 pp.lookups,
-		commit:                func() { pp.commit(msg, "") },
+		commit:                func() { commitMsg("") },
 		wg:                    wg,
 		msg:                   msg,
 		syncFailer:            syncFailer,
@@ -599,7 +607,7 @@ func (pp *PartitionProcessor) processMessage(ctx context.Context, wg *sync.WaitG
 	case msg.value == nil && pp.opts.nilHandling == NilIgnore:
 		// mark the message upstream so we don't receive it again.
 		// this is usually only an edge case in unit tests, as kafka probably never sends us nil messages
-		pp.commit(msg, "")
+		commitMsg("")
 		// otherwise drop it.
 		return nil
 	case msg.value == nil && pp.opts.nilHandling == NilProcess:
