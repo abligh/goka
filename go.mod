@@ -1,4 +1,4 @@
-module github.com/lovoo/goka
+module github.com/abligh/goka
 
 go 1.26.5
 
