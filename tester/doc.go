@@ -42,6 +42,6 @@ And in the unit test something like:
     }
   }
 
-See https://github.com/lovoo/goka/tree/master/examples/testing for a full example
+See https://github.com/abligh/goka/tree/master/examples/testing for a full example
 */
 package tester

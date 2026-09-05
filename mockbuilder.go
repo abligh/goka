@@ -6,7 +6,7 @@ import (
 	"hash"
 	"testing"
 
-	"github.com/lovoo/goka/storage"
+	"github.com/abligh/goka/storage"
 	"go.uber.org/mock/gomock"
 )
 

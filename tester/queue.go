@@ -4,7 +4,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lovoo/goka"
+	"github.com/abligh/goka"
 )
 
 type message struct {

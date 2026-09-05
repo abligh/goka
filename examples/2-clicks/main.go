@@ -8,9 +8,9 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/codec"
 	"github.com/gorilla/mux"
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/codec"
 )
 
 var (

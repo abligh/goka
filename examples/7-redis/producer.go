@@ -1,6 +1,6 @@
 package main
 
-import "github.com/lovoo/goka"
+import "github.com/abligh/goka"
 
 // Producer defines an interface whose events are produced on kafka.
 type Producer interface {

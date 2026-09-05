@@ -15,14 +15,14 @@ import (
 	"time"
 
 	"github.com/IBM/sarama"
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/codec"
+	"github.com/abligh/goka/multierr"
+	"github.com/abligh/goka/web/actions"
+	"github.com/abligh/goka/web/index"
+	"github.com/abligh/goka/web/monitor"
+	"github.com/abligh/goka/web/query"
 	"github.com/gorilla/mux"
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/codec"
-	"github.com/lovoo/goka/multierr"
-	"github.com/lovoo/goka/web/actions"
-	"github.com/lovoo/goka/web/index"
-	"github.com/lovoo/goka/web/monitor"
-	"github.com/lovoo/goka/web/query"
 )
 
 var (

@@ -13,7 +13,7 @@ import (
 // no promises stay unfinished.
 // To run the test, get a local kafka-container running (e.g. go to
 // examples-directory and do `make restart`), then run the tests with
-// `go test -v github.com/lovoo/goka/kafka/ -tags=kafka`
+// `go test -v github.com/abligh/goka/kafka/ -tags=kafka`
 func TestProducerError(t *testing.T) {
 	cfg := DefaultConfig()
 	p, err := NewProducer([]string{"localhost:9092"}, cfg)

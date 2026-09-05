@@ -1,7 +1,7 @@
 package goka
 
 import (
-	"github.com/lovoo/goka/storage"
+	"github.com/abligh/goka/storage"
 )
 
 // Iterator allows one to iterate over the keys of a view.

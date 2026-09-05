@@ -8,10 +8,10 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/examples/3-messaging"
+	"github.com/abligh/goka/examples/3-messaging/collector"
 	"github.com/gorilla/mux"
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/examples/3-messaging"
-	"github.com/lovoo/goka/examples/3-messaging/collector"
 )
 
 func Run(brokers []string, stream goka.Stream) {

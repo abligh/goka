@@ -12,8 +12,8 @@ import (
 	"github.com/IBM/sarama"
 	"github.com/hashicorp/go-multierror"
 
-	"github.com/lovoo/goka/multierr"
-	"github.com/lovoo/goka/storage"
+	"github.com/abligh/goka/multierr"
+	"github.com/abligh/goka/storage"
 )
 
 const (

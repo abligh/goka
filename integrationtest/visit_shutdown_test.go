@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/codec"
-	"github.com/lovoo/goka/tester"
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/codec"
+	"github.com/abligh/goka/tester"
 	"github.com/stretchr/testify/require"
 )
 

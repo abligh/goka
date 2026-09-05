@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/lovoo/goka/storage"
+	"github.com/abligh/goka/storage"
 	"github.com/stretchr/testify/require"
 )
 

@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/codec"
-	"github.com/lovoo/goka/storage"
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/codec"
+	"github.com/abligh/goka/storage"
 	"github.com/stretchr/testify/require"
 )
 
@@ -136,7 +136,7 @@ func TestProcessorVisit(t *testing.T) {
 
 	// Tests if a panic occurs while visiting, while the iterator is still pushing
 	// messages into the partition processor's visit-channel.
-	// Regression test for https://github.com/lovoo/goka/issues/433
+	// Regression test for https://github.com/abligh/goka/issues/433
 	t.Run("visit-panic-slow", func(t *testing.T) {
 		group, input := nextTopics()
 		em, finish := createEmitter(input)

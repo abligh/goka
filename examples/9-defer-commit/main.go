@@ -10,10 +10,10 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/codec"
+	"github.com/abligh/goka/multierr"
 	"github.com/hashicorp/go-multierror"
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/codec"
-	"github.com/lovoo/goka/multierr"
 )
 
 var (

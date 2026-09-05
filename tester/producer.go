@@ -1,7 +1,7 @@
 package tester
 
 import (
-	"github.com/lovoo/goka"
+	"github.com/abligh/goka"
 )
 
 // emitHandler abstracts a function that allows to overwrite kafkamock's Emit function to

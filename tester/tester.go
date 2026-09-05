@@ -7,8 +7,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/storage"
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/storage"
 
 	"github.com/IBM/sarama"
 )

@@ -3,10 +3,10 @@ package detector
 import (
 	"context"
 	"encoding/json"
-	"github.com/lovoo/goka"
-	"github.com/lovoo/goka/examples/3-messaging"
-	"github.com/lovoo/goka/examples/3-messaging/blocker"
-	"github.com/lovoo/goka/examples/3-messaging/topicinit"
+	"github.com/abligh/goka"
+	"github.com/abligh/goka/examples/3-messaging"
+	"github.com/abligh/goka/examples/3-messaging/blocker"
+	"github.com/abligh/goka/examples/3-messaging/topicinit"
 )
 
 const (

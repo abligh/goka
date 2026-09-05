@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 
-	"github.com/lovoo/goka/examples/3-messaging"
-	"github.com/lovoo/goka/examples/3-messaging/service"
+	"github.com/abligh/goka/examples/3-messaging"
+	"github.com/abligh/goka/examples/3-messaging/service"
 )
 
 var (

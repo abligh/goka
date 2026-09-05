@@ -7,9 +7,9 @@ import (
 	"sync"
 
 	"github.com/IBM/sarama"
+	"github.com/abligh/goka/multierr"
+	"github.com/abligh/goka/storage"
 	"github.com/hashicorp/go-multierror"
-	"github.com/lovoo/goka/multierr"
-	"github.com/lovoo/goka/storage"
 )
 
 // ViewState represents the state of the view

@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/IBM/sarama"
-	"github.com/lovoo/goka/storage"
+	"github.com/abligh/goka/storage"
 )
 
 // UpdateContext defines the interface for UpdateCallback arguments.

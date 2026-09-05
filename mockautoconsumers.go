@@ -9,8 +9,8 @@ import (
 	"testing"
 
 	"github.com/IBM/sarama"
+	"github.com/abligh/goka/multierr"
 	"github.com/hashicorp/go-multierror"
-	"github.com/lovoo/goka/multierr"
 )
 
 const (
