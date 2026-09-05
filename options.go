@@ -146,6 +146,7 @@ type poptions struct {
 	nilHandling            NilHandling
 	backoffResetTime       time.Duration
 	hotStandby             bool
+	cooperativeRebalance   bool
 	recoverAhead           bool
 	producerDefaultHeaders Headers
 
@@ -258,6 +259,33 @@ func WithHasher(hasher func() hash.Hash32) ProcessorOption {
 // all partitions are hot in other processor instances, but it requires
 // more resources (in particular network and disk).
 // If this option is used, the option `WithRecoverAhead` should also be added to avoid unnecessary delays.
+// WithCooperativeRebalance tells the processor that its consumer group takes
+// part in incremental cooperative rebalancing (KIP-429) rather than the eager,
+// stop-the-world protocol, and that it should therefore gain and release
+// partitions individually while a session keeps running.
+//
+// It selects nothing by itself. The protocol is chosen by the balance strategy
+// in the sarama config -- CooperativeCopartitioningStrategy is the one that
+// both copartitions and speaks the cooperative protocol -- and this option
+// tells the processor to expect what that protocol does:
+//
+//   - a partition may be added to a session that is already running, without
+//     Setup being called again, so the processor creates and starts it on
+//     demand;
+//   - a partition may be revoked while the session continues, so the processor
+//     stops that partition itself rather than waiting for Cleanup, which the
+//     cooperative protocol does not call until the member leaves the group.
+//
+// Without this option neither behavior is reachable, so an eager group behaves
+// exactly as before. With this option but an eager strategy, the processor
+// waits for events that never arrive: harmless, and pointless. Set the two
+// together or not at all.
+func WithCooperativeRebalance() ProcessorOption {
+	return func(o *poptions, gg *GroupGraph) {
+		o.cooperativeRebalance = true
+	}
+}
+
 func WithHotStandby() ProcessorOption {
 	return func(o *poptions, gg *GroupGraph) {
 		o.hotStandby = true

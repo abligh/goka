@@ -462,6 +462,21 @@ func (mr *MockClusterAdminMockRecorder) AlterConfig(resourceType, name, entries,
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlterConfig", reflect.TypeOf((*MockClusterAdmin)(nil).AlterConfig), resourceType, name, entries, validateOnly)
 }
 
+// AlterConsumerGroupOffsets mocks base method.
+func (m *MockClusterAdmin) AlterConsumerGroupOffsets(group string, offsets map[string]map[int32]sarama.OffsetAndMetadata, options *sarama.AlterConsumerGroupOffsetsOptions) (*sarama.OffsetCommitResponse, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "AlterConsumerGroupOffsets", group, offsets, options)
+	ret0, _ := ret[0].(*sarama.OffsetCommitResponse)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// AlterConsumerGroupOffsets indicates an expected call of AlterConsumerGroupOffsets.
+func (mr *MockClusterAdminMockRecorder) AlterConsumerGroupOffsets(group, offsets, options any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "AlterConsumerGroupOffsets", reflect.TypeOf((*MockClusterAdmin)(nil).AlterConsumerGroupOffsets), group, offsets, options)
+}
+
 // AlterPartitionReassignments mocks base method.
 func (m *MockClusterAdmin) AlterPartitionReassignments(topic string, assignment [][]int32) error {
 	m.ctrl.T.Helper()
@@ -708,6 +723,21 @@ func (mr *MockClusterAdminMockRecorder) DescribeConfig(resource any) *gomock.Cal
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeConfig", reflect.TypeOf((*MockClusterAdmin)(nil).DescribeConfig), resource)
 }
 
+// DescribeConfigs mocks base method.
+func (m *MockClusterAdmin) DescribeConfigs(resources []*sarama.ConfigResource, options sarama.DescribeConfigsOptions) ([]*sarama.ConfigResourceResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "DescribeConfigs", resources, options)
+	ret0, _ := ret[0].([]*sarama.ConfigResourceResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// DescribeConfigs indicates an expected call of DescribeConfigs.
+func (mr *MockClusterAdminMockRecorder) DescribeConfigs(resources, options any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "DescribeConfigs", reflect.TypeOf((*MockClusterAdmin)(nil).DescribeConfigs), resources, options)
+}
+
 // DescribeConsumerGroups mocks base method.
 func (m *MockClusterAdmin) DescribeConsumerGroups(groups []string) ([]*sarama.GroupDescription, error) {
 	m.ctrl.T.Helper()
@@ -827,6 +857,21 @@ func (mr *MockClusterAdminMockRecorder) ListConsumerGroupOffsets(group, topicPar
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListConsumerGroupOffsets", reflect.TypeOf((*MockClusterAdmin)(nil).ListConsumerGroupOffsets), group, topicPartitions)
 }
 
+// ListConsumerGroupOffsetsBatch mocks base method.
+func (m *MockClusterAdmin) ListConsumerGroupOffsetsBatch(groupTopics map[string]map[string][]int32) (map[string]*sarama.OffsetFetchResponseGroup, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListConsumerGroupOffsetsBatch", groupTopics)
+	ret0, _ := ret[0].(map[string]*sarama.OffsetFetchResponseGroup)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListConsumerGroupOffsetsBatch indicates an expected call of ListConsumerGroupOffsetsBatch.
+func (mr *MockClusterAdminMockRecorder) ListConsumerGroupOffsetsBatch(groupTopics any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListConsumerGroupOffsetsBatch", reflect.TypeOf((*MockClusterAdmin)(nil).ListConsumerGroupOffsetsBatch), groupTopics)
+}
+
 // ListConsumerGroups mocks base method.
 func (m *MockClusterAdmin) ListConsumerGroups() (map[string]string, error) {
 	m.ctrl.T.Helper()
@@ -840,6 +885,21 @@ func (m *MockClusterAdmin) ListConsumerGroups() (map[string]string, error) {
 func (mr *MockClusterAdminMockRecorder) ListConsumerGroups() *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListConsumerGroups", reflect.TypeOf((*MockClusterAdmin)(nil).ListConsumerGroups))
+}
+
+// ListOffsets mocks base method.
+func (m *MockClusterAdmin) ListOffsets(partitions map[string]map[int32]int64, options *sarama.ListOffsetsOptions) (map[string]map[int32]*sarama.OffsetResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "ListOffsets", partitions, options)
+	ret0, _ := ret[0].(map[string]map[int32]*sarama.OffsetResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// ListOffsets indicates an expected call of ListOffsets.
+func (mr *MockClusterAdminMockRecorder) ListOffsets(partitions, options any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "ListOffsets", reflect.TypeOf((*MockClusterAdmin)(nil).ListOffsets), partitions, options)
 }
 
 // ListPartitionReassignments mocks base method.
@@ -885,6 +945,21 @@ func (m *MockClusterAdmin) RemoveMemberFromConsumerGroup(groupId string, groupIn
 func (mr *MockClusterAdminMockRecorder) RemoveMemberFromConsumerGroup(groupId, groupInstanceIds any) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "RemoveMemberFromConsumerGroup", reflect.TypeOf((*MockClusterAdmin)(nil).RemoveMemberFromConsumerGroup), groupId, groupInstanceIds)
+}
+
+// UpdateFeatures mocks base method.
+func (m *MockClusterAdmin) UpdateFeatures(featureUpdates []sarama.FeatureUpdate) ([]sarama.UpdatableFeatureResult, error) {
+	m.ctrl.T.Helper()
+	ret := m.ctrl.Call(m, "UpdateFeatures", featureUpdates)
+	ret0, _ := ret[0].([]sarama.UpdatableFeatureResult)
+	ret1, _ := ret[1].(error)
+	return ret0, ret1
+}
+
+// UpdateFeatures indicates an expected call of UpdateFeatures.
+func (mr *MockClusterAdminMockRecorder) UpdateFeatures(featureUpdates any) *gomock.Call {
+	mr.mock.ctrl.T.Helper()
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "UpdateFeatures", reflect.TypeOf((*MockClusterAdmin)(nil).UpdateFeatures), featureUpdates)
 }
 
 // UpsertUserScramCredentials mocks base method.

@@ -809,12 +809,43 @@ func (g *Processor) ConsumeClaim(session sarama.ConsumerGroupSession, claim sara
 	defer g.log.Debugf("ConsumeClaim done for topic/partition %s/%d", claim.Topic(), claim.Partition())
 	part, has := g.getPartProc(claim.Partition())
 	if !has {
-		return fmt.Errorf("no partition (%d) to handle input in topic %s", claim.Partition(), claim.Topic())
+		// Under the eager protocol every partition of a session exists before
+		// any claim is consumed, because Setup created them all, so an unknown
+		// partition here is the error it always was. Under the cooperative
+		// protocol a rebalance adds claims to a session that is already
+		// running, without calling Setup again, and gaining a partition looks
+		// exactly like this.
+		if !g.opts.cooperativeRebalance {
+			return fmt.Errorf("no partition (%d) to handle input in topic %s", claim.Partition(), claim.Topic())
+		}
+		var err error
+		part, err = g.startAddedPartition(session, claim.Partition())
+		if err != nil {
+			return err
+		}
 	}
 
 	messages := claim.Messages()
 	stopping, doneWaitingForStop := part.stopping()
 	defer doneWaitingForStop()
+
+	// Under the cooperative protocol a revoked partition has its Messages
+	// channel closed while the session continues, and Cleanup -- which is what
+	// stops partitions under the eager protocol -- is not called until the
+	// member leaves the group. So this member must release a revoked partition
+	// itself: another member owns it now, and two owners of one partition is
+	// what copartitioning exists to prevent.
+	//
+	// This is gated on the option rather than inferred from the session's
+	// state. An eager rebalance also closes claims before it cancels the
+	// session -- that is how it begins -- so "the session is still live" does
+	// not distinguish the two, and inferring it stops partitions that Cleanup
+	// is about to stop anyway.
+	defer func() {
+		if g.opts.cooperativeRebalance && session.Context().Err() == nil {
+			g.stopRevokedPartition(claim.Partition())
+		}
+	}()
 
 	for {
 		select {
@@ -844,6 +875,48 @@ func (g *Processor) ConsumeClaim(session sarama.ConsumerGroupSession, claim sara
 		case <-session.Context().Done():
 			return nil
 		}
+	}
+}
+
+// startAddedPartition creates and starts a partition processor for a partition
+// gained during a cooperative rebalance, i.e. one added to a session that is
+// already running. It is unreachable under the eager protocol, where Setup has
+// created every partition of the session before any claim is consumed.
+func (g *Processor) startAddedPartition(session sarama.ConsumerGroupSession, partition int32) (*PartitionProcessor, error) {
+	g.log.Printf("gained partition %d in a rebalance, starting it", partition)
+	pproc, err := g.createPartitionProcessor(session.Context(), partition, runModeActive, createMessageCommitter(session))
+	if err != nil {
+		return nil, fmt.Errorf("error creating partition processor for gained partition %d: %w", partition, err)
+	}
+	g.setPartProc(partition, pproc)
+
+	// Recovery is bounded by the session rather than by a setup phase: there is
+	// no Setup to wait in, and the member's other partitions keep processing
+	// while this one catches up, which is the point of the protocol.
+	if err := pproc.Start(session.Context(), session.Context()); err != nil {
+		g.setPartProc(partition, nil)
+		return nil, fmt.Errorf("error starting gained partition %d: %w", partition, err)
+	}
+	return pproc, nil
+}
+
+// stopRevokedPartition stops the partition processor for a partition revoked
+// during a cooperative rebalance and forgets it, so the member stops serving
+// lookups from a table it no longer owns.
+//
+// Errors are logged rather than returned: the claim has already ended, and
+// failing the whole processor because one revoked partition did not stop
+// cleanly would turn a partial handover into the stop-the-world this protocol
+// exists to avoid.
+func (g *Processor) stopRevokedPartition(partition int32) {
+	pproc, has := g.getPartProc(partition)
+	if !has {
+		return
+	}
+	g.setPartProc(partition, nil)
+	g.log.Printf("partition %d revoked in a rebalance, stopping it", partition)
+	if err := pproc.Stop(); err != nil {
+		g.log.Printf("error stopping revoked partition %d: %v", partition, err)
 	}
 }
 
