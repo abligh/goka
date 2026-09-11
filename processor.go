@@ -405,12 +405,15 @@ func (g *Processor) rebalanceLoop(ctx context.Context) (rerr error) {
 		// Only a session that ended almost as soon as it began backs off,
 		// longer each time in a row, so a group that keeps returning
 		// immediately cannot spin.
+		var wait time.Duration
 		if time.Since(started) >= rebalanceMinSession {
 			backoff.Reset()
+		} else {
+			wait = backoff.Duration()
 		}
 
 		select {
-		case <-time.After(backoff.Duration()):
+		case <-time.After(wait):
 			g.log.Printf("Consumer group returned, Rebalancing.")
 		case <-ctx.Done():
 			g.log.Printf("Consumer group cancelled. Stopping")
