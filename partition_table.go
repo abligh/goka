@@ -330,7 +330,7 @@ func (p *PartitionTable) load(ctx context.Context, stopAfterCatchup bool) (rerr 
 
 	partConsumer, err = p.consumer.ConsumePartition(p.topic, p.partition, loadOffset)
 	if err != nil {
-		return fmt.Errorf("Error creating partition consumer for topic %s, partition %d, offset %d: %v", p.topic, p.partition, storedOffset, err)
+		return fmt.Errorf("Error creating partition consumer for topic %s, partition %d, offset %d: %w", p.topic, p.partition, storedOffset, err)
 	}
 
 	// close the consumer

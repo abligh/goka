@@ -82,7 +82,7 @@ func NewView(brokers []string, topic Table, codec Codec, options ...ViewOption) 
 
 	consumer, err := opts.builders.consumerSarama(brokers, opts.clientID)
 	if err != nil {
-		return nil, fmt.Errorf("Error creating sarama consumer for brokers %+v: %v", brokers, err)
+		return nil, fmt.Errorf("Error creating sarama consumer for brokers %+v: %w", brokers, err)
 	}
 	opts.tableCodec = codec
 
@@ -116,7 +116,7 @@ func (v *View) WaitRunning() <-chan struct{} {
 func (v *View) createPartitions(brokers []string) (rerr error) {
 	tm, err := v.opts.builders.topicmgr(brokers)
 	if err != nil {
-		return fmt.Errorf("Error creating topic manager: %v", err)
+		return fmt.Errorf("Error creating topic manager: %w", err)
 	}
 	defer func() {
 		e := tm.Close()
@@ -127,7 +127,7 @@ func (v *View) createPartitions(brokers []string) (rerr error) {
 
 	partitions, err := tm.Partitions(v.topic)
 	if err != nil {
-		return fmt.Errorf("Error getting partitions for topic %s: %v", v.topic, err)
+		return fmt.Errorf("Error getting partitions for topic %s: %w", v.topic, err)
 	}
 
 	// check assumption that partitions are gap-less
@@ -261,7 +261,7 @@ func (v *View) Run(ctx context.Context) (rerr error) {
 
 	err := recoverErrg.Wait().ErrorOrNil()
 	if err != nil {
-		rerr = fmt.Errorf("Error recovering partitions for view %s: %v", v.Topic(), err)
+		rerr = fmt.Errorf("Error recovering partitions for view %s: %w", v.Topic(), err)
 		return
 	}
 
@@ -281,7 +281,7 @@ func (v *View) Run(ctx context.Context) (rerr error) {
 
 	err = catchupErrg.Wait().ErrorOrNil()
 	if err != nil {
-		rerr = fmt.Errorf("Error catching up partitions for view %s: %v", v.Topic(), err)
+		rerr = fmt.Errorf("Error catching up partitions for view %s: %w", v.Topic(), err)
 	}
 	return
 }
